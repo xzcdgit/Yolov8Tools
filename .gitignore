@@ -1,4 +1,8 @@
 代码测试图像/*
+board_detect_model/*
+dataset/*
+Human_detect_model/*
+runs/*
 model/*
 *.pt
 *.jpg
