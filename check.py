@@ -5,15 +5,16 @@ import numpy as np
 import time
 import os
 
-def pic_check(model_path:str, pics_path:str):
+def check(model_path:str, pics_path:str):
     model = YOLO(model_path)
     files = os.listdir(pics_path)
     index = 0
     while index<len(files):
         file = files[index]
-        if file.split(".")[-1] != 'jpg':
+        file_type = file.split(".")[-1]
+        file_name = file[:(-len(file_type+1))]
+        if file_type != 'jpg':
             continue
-        st_time = time.time()
         img = cv2.imread(pics_path+"\\"+file)
         results = model(img, device = 0)
         # Visualize the results
