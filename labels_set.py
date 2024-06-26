@@ -5,7 +5,7 @@ import numpy as np
 
 
 #自动打标函数
-def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, img_show:bool=False):
+def label_set(self, model_path:str, img_folder_path:str, labels_out_folder_path:str, img_show:bool=False):
     # Load a model
     model = YOLO(model_path)  # pretrained YOLOv8n model
     # Run batched inference on a list of images
@@ -22,8 +22,8 @@ def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, i
     while index < files_num:
         out_str = ""
         file = files[index]
-        file_name = file.split(".")[0]
         file_type = file.split(".")[-1]
+        file_name = file[:-(len(file_type)+1)]
         if file_type != "jpg":
             continue
         results = model(img_folder_path+"\\"+file)  # return a list of Results objects
@@ -76,9 +76,10 @@ def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, i
                 f.write(out_str)
             index += 1
 
+
 if __name__ == "__main__":
     code_path = os.path.dirname(os.path.abspath(__file__))
-    model_path = code_path + "\\model\\board\\best_n.pt"
-    img_folder_path = code_path + "\\代码测试图像\\images"
-    labels_out_folder_path = code_path + "\\代码测试图像\\labels"
+    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train8\weights\best.pt"
+    img_folder_path = r"C:\Users\ADMIN\Desktop\素材\通道人检\0621\epoch\imgs"
+    labels_out_folder_path = r"C:\Users\ADMIN\Desktop\素材\通道人检\0621\epoch\labels"
     label_set(model_path, img_folder_path, labels_out_folder_path)
