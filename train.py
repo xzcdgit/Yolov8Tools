@@ -1,5 +1,6 @@
 from ultralytics import YOLO
 if __name__ == "__main__":
+<<<<<<< HEAD
     # Create a new YOLO model from scratch
     model = YOLO("yolov8s.yaml")
 
@@ -17,3 +18,12 @@ if __name__ == "__main__":
     # Export the model to ONNX format
     success = model.export(format="onnx")
     print(success)
+=======
+    # Load a model
+    model = YOLO("yolov8n.yaml")  # build a new model from YAML
+    model = YOLO("yolov8n.pt")  # load a pretrained model (recommended for training)
+    model = YOLO("yolov8n.yaml").load("yolov8n.pt")  # build from YAML and transfer weights
+
+    # Train the model
+    results = model.train(data="coco8.yaml", epochs=100, imgsz=640)
+>>>>>>> b4a804dc907180b56e261c2f762d7b9e08735c78
