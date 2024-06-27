@@ -64,20 +64,11 @@ def img_cut(imgs_path:str, labels_path:str,out_path:str, width_left_ratio:float=
         #print(out_label_text)
         #cv2.imshow("test",img_new)
         #cv2.waitKey(0)
-        
-        
-            
-    
-    
-
-
-
-
 
 if __name__ == "__main__":
-    imgs_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0626\imgs"
-    labels_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0626\labels"
-    out_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0626\output"
+    imgs_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0627\imgs"
+    labels_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0627\labels"
+    out_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0627\output"
     img_cut(imgs_path, labels_path, out_path, 0.4464, )
     
     
