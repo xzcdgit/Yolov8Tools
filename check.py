@@ -47,6 +47,7 @@ def check(model_path:str, check_path:str, save_path:str=""):
                 ret, frame = cap.read()         # 读取视频，读取到的某一帧存储到frame，若是读取成功，ret为True，反之为False
                 if ret:                         # 若是读取成功
                     results = model(frame, device = 0)
+                    print(results)
                     # Visualize the results
                     for i, r in enumerate(results):
                         # Plot results image
@@ -71,7 +72,7 @@ def check(model_path:str, check_path:str, save_path:str=""):
 
 if __name__ == "__main__":
     #videotest(r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train11\weights\best.pt", r"C:\Users\ADMIN\Desktop\素材\叠板检测\0612\20240611.mp4")
-    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train17\weights\best.pt"
-    imgs_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0626\imgs"
+    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train20\weights\best.pt"
+    imgs_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0629\imgs"
     save_path = r"D:\Code\Python\DeepLearning\yolov8\dataset\workers\images\speimg"
     check(model_path, imgs_path, save_path)

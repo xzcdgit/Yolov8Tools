@@ -154,7 +154,7 @@ def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, i
 
 if __name__ == "__main__":
     code_path = os.path.dirname(os.path.abspath(__file__))
-    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train17\weights\best.pt"
-    img_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0627\imgs"
-    labels_out_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0627\labels"
+    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train19\weights\best.pt"
+    img_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\06285\imgs"
+    labels_out_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\06285\labels"
     label_set(model_path, img_folder_path, labels_out_folder_path)
