@@ -6,4 +6,5 @@ runs/*
 model/*
 *.pt
 *.jpg
+*.png
 *.txt
