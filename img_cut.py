@@ -66,10 +66,8 @@ def img_cut(imgs_path:str, labels_path:str,out_path:str, width_left_ratio:float=
         #cv2.waitKey(0)
 
 if __name__ == "__main__":
-    imgs_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0629\imgs"
-    labels_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0629\labels"
-    out_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\0629\output"
+    imgs_path = r"C:\Users\24225\Desktop\train\person\imgs"
+    labels_path = r"C:\Users\24225\Desktop\train\person\labels"
+    out_path = r"C:\Users\24225\Desktop\train\person\output"
     img_cut(imgs_path, labels_path, out_path, 0.4464, )
-    
-    
     

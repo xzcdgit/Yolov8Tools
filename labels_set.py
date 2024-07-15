@@ -4,7 +4,6 @@ import shutil
 import cv2
 import numpy as np
 
-
 #自动打标函数
 def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, img_show:bool=False):
     # Load a model
@@ -154,7 +153,7 @@ def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, i
 
 if __name__ == "__main__":
     code_path = os.path.dirname(os.path.abspath(__file__))
-    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train19\weights\best.pt"
-    img_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\06285\imgs"
-    labels_out_folder_path = r"C:\Users\ADMIN\Desktop\material\ChaneHumanCheck\06285\labels"
+    model_path = r"C:\Users\24225\Desktop\train\person\model\best.pt"
+    img_folder_path = r"C:\Users\24225\Desktop\train\person\imgs"
+    labels_out_folder_path = r"C:\Users\24225\Desktop\train\person\labels"
     label_set(model_path, img_folder_path, labels_out_folder_path)
