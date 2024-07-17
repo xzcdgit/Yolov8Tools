@@ -6,11 +6,10 @@ import time
 import os
 
 #检测
-def check(model_path:str, check_path:str, save_path:str=""):
-    
+def check(model_path:str, check_path:str, save_path:str="", manual:bool=False):
     # 类型判定
     if os.path.isdir(check_path):
-        model = YOLO(model_path)        
+        model = YOLO(model_path)    
         files = os.listdir(check_path)
         index = 0
         while index<len(files):
@@ -27,7 +26,7 @@ def check(model_path:str, check_path:str, save_path:str=""):
             #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = cv2.resize(frame, dsize=None, fx=0.5, fy=0.5)
             cv2.imshow('frame', frame)  # 显示读取到的这一帧画面
-            key = cv2.waitKey(0)       # 等待一段时间，并且检测键盘输入
+            key = cv2.waitKey(0)        # 等待一段时间，并且检测键盘输入
             if key == ord('d'):     
                 index += 1
             elif key == ord('a'):     

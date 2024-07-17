@@ -153,7 +153,7 @@ def label_set(model_path:str, img_folder_path:str, labels_out_folder_path:str, i
 
 if __name__ == "__main__":
     code_path = os.path.dirname(os.path.abspath(__file__))
-    model_path = r"C:\Users\24225\Desktop\train\person\model\best.pt"
-    img_folder_path = r"C:\Users\24225\Desktop\train\person\imgs"
-    labels_out_folder_path = r"C:\Users\24225\Desktop\train\person\labels"
+    model_path = r"D:\Code\Python\HumanDetection_yolov8\best_s.pt"
+    img_folder_path = r"D:\Code\Python\StreamingTools\outs"
+    labels_out_folder_path = r"D:\Code\Python\StreamingTools\label_outs"
     label_set(model_path, img_folder_path, labels_out_folder_path)
