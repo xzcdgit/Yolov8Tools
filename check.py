@@ -5,11 +5,58 @@ import numpy as np
 import time
 import os
 
-#检测
-def check(model_path:str, check_path:str, save_path:str="", manual:bool=False):
+import cv2
+
+#按yolo的规则缩放图片
+def letterbox(img, new_shape=(640, 640), color=(114, 114, 114)):
+    shape = img.shape[:2]  # current shape [height, width]
+    if isinstance(new_shape, int):
+        new_shape = (new_shape, new_shape)
+
+    # Scale ratio (new / old)
+    r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+
+    # Compute padding
+    ratio = r, r  # width, height ratios
+    new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+    dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]  # wh padding
+    dw /= 2  # divide padding into 2 sides
+    dh /= 2
+
+    if shape[::-1] != new_unpad:  # resize
+        img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+    top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
+    left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
+    img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
+    return img
+    
+
+#速度测试
+def val_check(model_path:str, check_path:str, test_num:int):
     # 类型判定
     if os.path.isdir(check_path):
-        model = YOLO(model_path)    
+        model = YOLO(model_path)        
+        files = os.listdir(check_path)
+        imgs = []
+        for index in range(test_num):
+            file = files[index]
+            if file.split(".")[-1] != 'jpg':
+                continue
+            img = cv2.imread(check_path+"\\"+file)
+            imgs.append(img)
+        print('imgs num:{}'.format(len(imgs)))
+        while True:
+            st_time = time.time()
+            results = model(imgs, device = 0)
+            print(time.time()-st_time)
+
+
+
+#检测
+def check(model_path:str, check_path:str, save_path:str=""):
+    # 类型判定
+    if os.path.isdir(check_path):
+        model = YOLO(model_path)        
         files = os.listdir(check_path)
         index = 0
         while index<len(files):
@@ -26,7 +73,7 @@ def check(model_path:str, check_path:str, save_path:str="", manual:bool=False):
             #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = cv2.resize(frame, dsize=None, fx=0.5, fy=0.5)
             cv2.imshow('frame', frame)  # 显示读取到的这一帧画面
-            key = cv2.waitKey(0)        # 等待一段时间，并且检测键盘输入
+            key = cv2.waitKey(0)       # 等待一段时间，并且检测键盘输入
             if key == ord('d'):     
                 index += 1
             elif key == ord('a'):     
@@ -71,7 +118,9 @@ def check(model_path:str, check_path:str, save_path:str="", manual:bool=False):
 
 if __name__ == "__main__":
     #videotest(r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train11\weights\best.pt", r"C:\Users\ADMIN\Desktop\素材\叠板检测\0612\20240611.mp4")
-    model_path = r"C:\Code\Python\Yolov8Tools\runs\detect\train4\weights\best.pt"
+    model_path = r"C:\Code\Python\Yolov8Tools\runs\detect\train7\weights\best.pt"
     imgs_path = r"C:\Code\Python\Yolov8Tools\datasets\workers\images\train"
     save_path = r"C:\Users\24225\Desktop\临时"
-    check(model_path, imgs_path, save_path)
+    #check(model_path, imgs_path, save_path)
+    val_check(model_path, imgs_path, 200)
+    
