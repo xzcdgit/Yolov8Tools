@@ -47,7 +47,7 @@ def val_check(model_path:str, check_path:str, test_num:int):
         print('imgs num:{}'.format(len(imgs)))
         while True:
             st_time = time.time()
-            results = model(imgs, device = 0)
+            results = model.predict(imgs, device = '0')
             print(time.time()-st_time)
 
 
@@ -118,9 +118,9 @@ def check(model_path:str, check_path:str, save_path:str=""):
 
 if __name__ == "__main__":
     #videotest(r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train11\weights\best.pt", r"C:\Users\ADMIN\Desktop\素材\叠板检测\0612\20240611.mp4")
-    model_path = r"C:\Code\Python\Yolov8Tools\runs\detect\train7\weights\best.pt"
-    imgs_path = r"C:\Code\Python\Yolov8Tools\datasets\workers\images\train"
+    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train25\weights\best.pt"
+    imgs_path = r"D:\Code\Python\DeepLearning\yolov8\dataset\workers\images\train"
     save_path = r"C:\Users\24225\Desktop\临时"
     #check(model_path, imgs_path, save_path)
-    val_check(model_path, imgs_path, 200)
+    val_check(model_path, imgs_path, 10)
     
