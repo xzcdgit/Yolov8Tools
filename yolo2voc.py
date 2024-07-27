@@ -1,6 +1,7 @@
 from xml.dom.minidom import Document
 import os
 import cv2
+from tqdm import tqdm
 
 
 # def makexml(txtPath, xmlPath, picPath):  # txt所在文件夹路径，xml文件保存路径，图片所在文件夹路径
@@ -12,7 +13,7 @@ def makexml(picPath, txtPath, xmlPath):  # txt所在文件夹路径，xml文件�
            '1': "arclight",  # 此处的字典要与自己的classes.txt文件中的类对应，且顺序要一致
            }
     files = os.listdir(txtPath)
-    for i, name in enumerate(files):
+    for i, name in enumerate(tqdm(files)):
         xmlBuilder = Document()
         annotation = xmlBuilder.createElement("annotation")  # 创建annotation标签
         xmlBuilder.appendChild(annotation)
@@ -108,7 +109,7 @@ def makexml(picPath, txtPath, xmlPath):  # txt所在文件夹路径，xml文件�
 
 
 if __name__ == "__main__":
-    picPath = r"D:\Code\Python\DeepLearning\ssd.pytorch\data\HumanAndArclight\JPEGImages"  # 图片所在文件夹路径，后面的/一定要带上
-    txtPath = r"D:\Code\Python\DeepLearning\ssd.pytorch\data\HumanAndArclight\TmpLabel"  # yolo txt所在文件夹路径，后面的/一定要带上
-    xmlPath = r"D:\Code\Python\DeepLearning\ssd.pytorch\data\HumanAndArclight\Annotations"  # xml文件保存路径，后面的/一定要带上
+    picPath = r"C:\Code\Python\SSDTest\VOCdevkit\VOC2007\JPEGImages"  # 图片所在文件夹路径，后面的/一定要带上
+    txtPath = r"C:\Code\Python\SSDTest\VOCdevkit\VOC2007\YoloLabels"  # yolo txt所在文件夹路径，后面的/一定要带上
+    xmlPath = r"C:\Code\Python\SSDTest\VOCdevkit\VOC2007\Annotations"  # xml文件保存路径，后面的/一定要带上
     makexml(picPath, txtPath, xmlPath)

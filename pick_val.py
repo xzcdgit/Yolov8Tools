@@ -22,7 +22,7 @@ if __name__ == "__main__":
         elif suffix == 'txt':
             label_names.append(file)
     
-    sample_size = len(img_names) // 8  # 随机取12.5%的数据作为测试集
+    sample_size = len(img_names) // 7  # 随机取14.3%的数据作为测试集
     random_part = random.sample(img_names, sample_size)
     remaining_part = [item for item in img_names if item not in random_part]
 
