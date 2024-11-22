@@ -115,12 +115,13 @@ def check(model_path:str, check_path:str, save_path:str=""):
                 else:
                     cap.release()
             cv2.destroyAllWindows()             # 关闭所有窗口
+    else:
+        print('文件类型错误')
 
 if __name__ == "__main__":
     #videotest(r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train11\weights\best.pt", r"C:\Users\ADMIN\Desktop\素材\叠板检测\0612\20240611.mp4")
-    model_path = r"D:\Code\Python\DeepLearning\yolov8\runs\detect\train25\weights\best.pt"
-    imgs_path = r"D:\Code\Python\DeepLearning\yolov8\dataset\workers\images\train"
+    model_path = r"C:\Code\Python\Yolov8Tools\runs\segment\train22\weights\best.pt"
+    imgs_path = r"C:\Code\Python\Yolov8Tools\datasets\boxes-seg\images\train2017"
     save_path = r"C:\Users\24225\Desktop\临时"
-    #check(model_path, imgs_path, save_path)
-    val_check(model_path, imgs_path, 10)
-    
+    check(model_path, imgs_path, save_path)
+    #val_check(model_path, imgs_path, 10)

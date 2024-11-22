@@ -1,5 +1,6 @@
 代码测试图像/*
 board_detect_model/*
+datasets/*
 dataset/*
 Human_detect_model/*
 runs/*
@@ -8,3 +9,6 @@ model/*
 *.jpg
 *.txt
 *.cache
+*.zip
+*.7z
+*.rar
