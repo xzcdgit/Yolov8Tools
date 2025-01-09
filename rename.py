@@ -17,5 +17,5 @@ def rename(filePath):
     
 
 if __name__ == '__main__':
-    filePath = r'C:\Code\Python\SSDTest\VOCdevkit\VOC2007\Annotations'
+    filePath = r'C:\Users\24225\Desktop\2025-01-03\picture\ch1'
     rename(filePath)

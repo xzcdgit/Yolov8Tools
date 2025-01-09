@@ -1,11 +1,11 @@
 import os
 import shutil
 import random
-#随机挑选15%的数据作为测试集
+#随机挑选xx%的数据作为测试集
 
 if __name__ == "__main__":
-    data_path = r"C:\Users\24225\Desktop\data"
-    ori_data_path = data_path + r"\all"
+    data_path = r"C:\Code\Python\Yolov8Tools\datasets\men_heng_liang_liu_shui_xian"
+    ori_data_path = r"C:\Users\24225\Desktop\2025-01-03\mege"
     train_imgs_path = data_path + r"\images\train"
     train_labels_path = data_path + r"\labels\train"
     val_imgs_path = data_path + r"\images\val"
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         elif suffix == 'txt':
             label_names.append(file)
     
-    sample_size = len(img_names) // 7  # 随机取14.3%的数据作为测试集
+    sample_size = len(img_names) // 10  # 随机取xx%的数据作为测试集
     random_part = random.sample(img_names, sample_size)
     remaining_part = [item for item in img_names if item not in random_part]
 
