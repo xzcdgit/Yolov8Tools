@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import subprocess
 import shutil
 import random
@@ -7,7 +8,7 @@ import cv2
 from ultralytics import YOLO
 import numpy as np
 import threading
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5.QtCore import pyqtSignal, QObject, Qt
 from PyQt5.QtGui import QPixmap, QImage
 from Ui_main import Ui_MainWindow
@@ -142,9 +143,10 @@ def split_and_copy_images(folder1, folder2, folder_a, ratio, auto_delete=False):
 
 
 class YOLOModel(QObject):
-    qt_signal = pyqtSignal(str)
-
+    train_epoch_start_signal = pyqtSignal(list)
+    train_end_signal = pyqtSignal(list)
     def __init__(self):
+        super().__init__()
         pass
 
     def train_yolo(self, model_path, data_path, epoch_count, resume):
@@ -154,7 +156,8 @@ class YOLOModel(QObject):
         message = ""
         # 定义模型
         model = YOLO(model_path)
-        model.add_callback("on_train_epoch_start", self.get_train_info)
+        model.add_callback("on_train_epoch_end", self.get_train_info)
+        model.add_callback("on_train_end", self.train_end_info)
         # 训练模型
         if resume:
             message += "继续训练模型"
@@ -172,13 +175,27 @@ class YOLOModel(QObject):
         """
         获取训练信息
         """
-        # self.qt_signal.emit(f"训练信息: {trainer}")
-        print(
-            trainer.epoch,
-            trainer.epochs,
-            trainer.epoch_time,
-            trainer.time_start,
-            trainer.metrics,
+        self.train_epoch_start_signal.emit(
+            [
+                trainer.epoch,
+                trainer.epochs,
+                trainer.epoch_time,
+                trainer.metrics,
+            ]
+        )
+        
+    def train_end_info(self,trainer):
+        """
+        训练结束
+        """
+        self.train_end_signal.emit(
+            [
+                trainer.epoch,
+                trainer.epochs,
+                trainer.epoch_time,
+                trainer.metrics,
+                trainer.save_dir
+            ]
         )
         pass
 
@@ -282,7 +299,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.set_click_trigger()
-
+        self.connect_signals()
         self.default_path()
 
     def default_path(self):
@@ -307,14 +324,20 @@ class MyApp(QMainWindow, Ui_MainWindow):
         self.lineEdit_path_yaml.setText(
             r"C:\Users\24225\AppData\Local\Programs\Python\Python311\Lib\site-packages\ultralytics\cfg\datasets\men_heng_liang_liu_shui_xian.yaml"
         )
-        self.lineEdit_path_check_model.setText(r"C:\Code\Python\Yolov8Tools\runs\detect\train12\weights\best.pt")
-        self.lineEdit_path_check.setText(r"C:\Users\24225\Desktop\2025-01-03\10.70.79.200_01_20250103101736342.mp4")
+        self.lineEdit_path_check_model.setText(
+            r"C:\Code\Python\Yolov8Tools\runs\detect\train12\weights\best.pt"
+        )
+        self.lineEdit_path_check.setText(
+            r"C:\Users\24225\Desktop\2025-01-03\10.70.79.200_01_20250103101736342.mp4"
+        )
         self.lineEdit_path_save.setText(r"C:\Users\24225\Desktop\2025-01-03\save")
+
     def connect_signals(self):
         """
         连接信号
         """
-        self.yolo.qt_signal.connect(self.show_message)
+        self.my_yolo.train_epoch_start_signal.connect(self.callback_train_info)
+        self.my_yolo.train_end_signal.connect(self.callbcak_train_end)
 
     def set_click_trigger(self):
         """
@@ -349,13 +372,39 @@ class MyApp(QMainWindow, Ui_MainWindow):
                 lambda checked, idx=index: self.set_choice_file_trigger(idx)
             )
 
-    def show_message(self, message):
+    def callback_train_info(self, info):
         """
         显示消息
         """
-        print(message)
-        # self.statusbar.showMessage(message)
-
+        epoch, epochs, epoch_time, metrics = info
+        epoch += 1
+        self.progressBar_train.setValue(int(epoch / epochs * 100))
+        
+        self.textBrowser_train.append(f"Epoch: {epoch}/{epochs}, EpochTime: {epoch_time}")
+        elapsed_time = time.time() - self.train_start_time
+        formatted_elapsed_time = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+        self.label_train_time.setText(f"{formatted_elapsed_time}")
+        if epoch <= 1:
+            self.label_train_resum_time.setText("计算中...")
+        else:
+            remaining_time = (epochs - epoch)*epoch_time
+            formatted_remaining_time = time.strftime("%H:%M:%S", time.gmtime(remaining_time))
+            self.label_train_resum_time.setText(f"{formatted_remaining_time}")
+    
+    def callbcak_train_end(self, info):
+        """
+        训练结束
+        """
+        epoch, epochs, epoch_time, metrics, save_dir = info
+        epoch += 1
+        if epoch < epochs:
+            self.textBrowser_train.append("训练提前完成")
+        else:
+            self.textBrowser_train.append("训练完成")
+        self.textBrowser_train.append(f"模型保存在: {save_dir}")
+        self.progressBar_train.setValue(100)
+        self.label_train_resum_time.setText("00:00:00")
+    
     def set_choice_trigger(self, index):
         """
         选择路径按钮触发事件
@@ -369,7 +418,7 @@ class MyApp(QMainWindow, Ui_MainWindow):
             self.lineEdit_path_dataset,
             self.lineEdit_path_check_model,
             self.lineEdit_path_check,
-            self.lineEdit_path_save
+            self.lineEdit_path_save,
         ]
         path = QFileDialog.getExistingDirectory(self, "选择文件夹")
         if path:
@@ -419,9 +468,10 @@ class MyApp(QMainWindow, Ui_MainWindow):
         训练模型
         """
         if self.train_thread is not None and self.train_thread.is_alive():
-            #self.show_message("训练线程正在运行")
             self.statusbar.showMessage("训练线程已经运行")
+            QMessageBox.information(self, "提示", "训练已经开始，请勿重复运行") #最后的Yes表示弹框的按钮显示为Yes，默认按钮显示为OK,不填QMessageBox.Yes即为默认
         else:
+            self.train_start_time = time.time()
             model_path = self.lineEdit_path_model.text()
             data_path = self.lineEdit_path_yaml.text()
             epoch_count = self.spinBox_val_epoch.value()
@@ -433,7 +483,9 @@ class MyApp(QMainWindow, Ui_MainWindow):
             )
             self.train_thread.start()
             self.statusbar.showMessage("训练线程已经启动")
-            
+            self.textBrowser_train.append("开始训练，初始化中...")
+
+
     def start_check(self):
         if self.check_thread is not None and self.check_thread.is_alive():
             self.statusbar.showMessage("检测线程正在运行")
